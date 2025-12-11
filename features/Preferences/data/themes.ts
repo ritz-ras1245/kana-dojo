@@ -671,6 +671,12 @@ const baseThemeSets: BaseThemeGroup[] = [
         mainColor: 'oklch(71.96% 0.1494 39.01 / 1)',
         secondaryColor: 'oklch(88.63% 0.1367 194.97 / 1)',
       },
+      {
+        id: 'electric-phantasm',
+        backgroundColor: 'oklch(16.84% 0.0840 312.74 / 1)',
+        mainColor: 'oklch(78.00% 0.1466 226.62 / 1)',
+        secondaryColor: 'oklch(88.69% 0.2657 137.42 / 1)',
+      }
     ],
   },
   {
