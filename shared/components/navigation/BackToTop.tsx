@@ -42,51 +42,80 @@ export default function BackToTop() {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    const topBar = document.getElementById('main-training-action-bar');
-    const desktopBottomBar = document.getElementById('main-bottom-bar');
-
     const computeOffset = () => {
       const gutter = 16;
+      const isMobile = window.innerWidth < 1024;
 
-      const topBarRect = topBar?.getBoundingClientRect();
-      const topBarVisible = !!topBarRect && topBarRect.height > 0;
+      const trainingActionBar = document.getElementById(
+        'main-training-action-bar'
+      );
+      const sidebar = document.getElementById('main-sidebar');
+      const desktopBottomBar = document.getElementById('main-bottom-bar');
 
-      // Prefer TopBar if present/visible: place button above its top edge.
-      // This accounts for mobile layouts where TopBar is offset upward.
-      if (topBarVisible) {
-        const topBarTopFromViewportBottom = window.innerHeight - topBarRect.top;
-        setBottomOffset(Math.max(gutter, topBarTopFromViewportBottom + gutter));
-        return;
+      const trainingBarRect = trainingActionBar?.getBoundingClientRect();
+      const trainingBarVisible =
+        !!trainingBarRect && trainingBarRect.height > 0;
+
+      if (isMobile) {
+        // Mobile: sidebar is at bottom as nav bar
+        const sidebarHeight = sidebar?.offsetHeight ?? 0;
+
+        if (trainingBarVisible) {
+          // Training action bar sits above sidebar, so we need both heights
+          const trainingBarTopFromViewportBottom =
+            window.innerHeight - trainingBarRect.top;
+          setBottomOffset(
+            Math.max(gutter, trainingBarTopFromViewportBottom + gutter)
+          );
+        } else {
+          // Just the sidebar/bottom nav
+          setBottomOffset(sidebarHeight + gutter);
+        }
+      } else {
+        // Desktop layout
+        if (trainingBarVisible) {
+          const trainingBarTopFromViewportBottom =
+            window.innerHeight - trainingBarRect.top;
+          setBottomOffset(
+            Math.max(gutter, trainingBarTopFromViewportBottom + gutter)
+          );
+        } else {
+          // Fallback: place above the desktop bottom bar if present
+          const desktopBottomBarHeight = desktopBottomBar?.offsetHeight ?? 0;
+          setBottomOffset(desktopBottomBarHeight + gutter);
+        }
       }
-
-      // Fallback: place above the desktop bottom bar if present.
-      const desktopBottomBarHeight = desktopBottomBar?.offsetHeight ?? 0;
-      setBottomOffset(desktopBottomBarHeight + gutter);
     };
 
     computeOffset();
 
     const observers: ResizeObserver[] = [];
 
-    if (typeof ResizeObserver !== 'undefined') {
-      if (topBar) {
-        const observer = new ResizeObserver(computeOffset);
-        observer.observe(topBar);
-        observers.push(observer);
-      }
+    // Observe all relevant elements for size changes
+    const elementsToObserve = [
+      document.getElementById('main-training-action-bar'),
+      document.getElementById('main-sidebar'),
+      document.getElementById('main-bottom-bar')
+    ].filter(Boolean) as HTMLElement[];
 
-      if (desktopBottomBar) {
+    if (typeof ResizeObserver !== 'undefined') {
+      elementsToObserve.forEach(el => {
         const observer = new ResizeObserver(computeOffset);
-        observer.observe(desktopBottomBar);
+        observer.observe(el);
         observers.push(observer);
-      }
+      });
     }
+
+    // Also use MutationObserver to detect when training action bar appears/disappears
+    const mutationObserver = new MutationObserver(computeOffset);
+    mutationObserver.observe(document.body, { childList: true, subtree: true });
 
     window.addEventListener('resize', computeOffset);
 
     return () => {
       window.removeEventListener('resize', computeOffset);
       observers.forEach(o => o.disconnect());
+      mutationObserver.disconnect();
     };
   }, []);
 
