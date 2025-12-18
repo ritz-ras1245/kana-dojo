@@ -6,7 +6,7 @@ import useKanjiStore from '@/features/Kanji/store/useKanjiStore';
 import useVocabStore from '@/features/Vocabulary/store/useVocabStore';
 import usePreferencesStore from '@/features/Preferences/store/usePreferencesStore';
 import { useClick } from '@/shared/hooks/useAudio';
-import { Play, Timer } from 'lucide-react';
+import { Play, Zap } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import GameModes from '@/shared/components/Menu/GameModes';
 // import { ActionButton } from '@/shared/components/ui/ActionButton';
@@ -162,7 +162,7 @@ const TrainingActionBar: React.FC<ITopBarProps> = ({
       {/* Invisible placeholder to measure parent width/position */}
       <div
         ref={placeholderRef}
-        className='w-full h-0 opacity-0 pointer-events-none'
+        className='pointer-events-none h-0 w-full opacity-0'
       />
 
       <AnimatePresence>
@@ -188,20 +188,20 @@ const TrainingActionBar: React.FC<ITopBarProps> = ({
               'fixed z-40',
               'bg-[var(--background-color)]',
               'border-t-2 border-[var(--border-color)]',
-              'py-3 px-4'
+              'px-4 py-3'
             )}
           >
             <div
               className={clsx(
-                'flex flex-row items-center justify-center gap-2 md:gap-8 ',
-                'w-full max-w-4xl mx-auto'
+                'flex flex-row items-center justify-center gap-2 md:gap-8',
+                'mx-auto w-full max-w-4xl'
               )}
             >
               {/* Blitz Button */}
               {showBlitz && (
                 <button
                   className={clsx(
-                    'flex-1 max-w-sm h-12 px-2 sm:px-6 flex flex-row justify-center items-center gap-2',
+                    'flex h-12 max-w-sm flex-1 flex-row items-center justify-center gap-2 px-2 sm:px-6',
                     'bg-[var(--secondary-color)] text-[var(--background-color)]',
                     'rounded-2xl transition-colors duration-200',
                     'border-b-6 border-[var(--secondary-color-accent)] shadow-sm',
@@ -214,7 +214,7 @@ const TrainingActionBar: React.FC<ITopBarProps> = ({
                     setShowGameModesModal(true);
                   }}
                 >
-                  <Timer size={20} />
+                  <Zap size={20} />
                   <span className='whitespace-nowrap'>Blitz</span>
                 </button>
               )}
@@ -224,13 +224,13 @@ const TrainingActionBar: React.FC<ITopBarProps> = ({
                 ref={buttonRef}
                 disabled={!isFilled}
                 className={clsx(
-                  'flex-1 max-w-sm h-12 px-2 sm:px-6 flex flex-row justify-center items-center gap-2',
+                  'flex h-12 max-w-sm flex-1 flex-row items-center justify-center gap-2 px-2 sm:px-6',
                   'rounded-2xl transition-colors duration-200',
-                  'font-medium border-b-6 shadow-sm',
+                  'border-b-6 font-medium shadow-sm',
                   'hover:cursor-pointer',
                   isFilled
-                    ? 'bg-[var(--main-color)] text-[var(--background-color)] border-[var(--main-color-accent)]'
-                    : 'bg-[var(--card-color)] text-[var(--border-color)] cursor-not-allowed'
+                    ? 'border-[var(--main-color-accent)] bg-[var(--main-color)] text-[var(--background-color)]'
+                    : 'cursor-not-allowed bg-[var(--card-color)] text-[var(--border-color)]'
                 )}
                 onClick={e => {
                   e.currentTarget.blur();
