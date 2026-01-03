@@ -622,27 +622,25 @@ const WordBuildingGame = ({
           showContinue ? 'continue' : showTryAgain ? 'try again' : 'check'
         }
         buttonRef={buttonRef}
-        secondaryAction={
-          !showContinue &&
-          !showTryAgain && (
-            <div className='flex h-[68px] items-end sm:h-[72px]'>
-              <ActionButton
-                borderBottomThickness={12}
-                borderRadius='3xl'
-                colorScheme='secondary'
-                borderColorScheme='secondary'
-                className={clsx(
-                  'w-auto px-4 py-2.5 transition-all duration-150 sm:px-6 sm:py-3',
-                  !canCheck && 'cursor-default opacity-60'
-                )}
-                onClick={handleClearPlaced}
-                aria-label='Clear all tiles'
-              >
-                <Trash2 className='h-8 w-8 fill-current' />
-              </ActionButton>
-            </div>
-          )
-        }
+        // secondaryAction={
+        //   !showContinue &&
+        //   !showTryAgain && (
+        //     <ActionButton
+        //       borderBottomThickness={12}
+        //       borderRadius='3xl'
+        //       colorScheme='secondary'
+        //       borderColorScheme='secondary'
+        //       className={clsx(
+        //         'w-full px-4 py-2.5 transition-all duration-150 sm:w-auto sm:px-6 sm:py-3',
+        //         !canCheck && 'cursor-default opacity-60'
+        //       )}
+        //       onClick={handleClearPlaced}
+        //       aria-label='Clear all tiles'
+        //     >
+        //       <Trash2 className='h-8 w-8 fill-current' />
+        //     </ActionButton>
+        //   )
+        // }
       />
 
       {/* Spacer */}

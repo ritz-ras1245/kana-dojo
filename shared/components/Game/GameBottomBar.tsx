@@ -1,6 +1,11 @@
 'use client';
 import { ReactNode } from 'react';
-import { CircleCheck, CircleX, CircleArrowRight } from 'lucide-react';
+import {
+  CircleCheck,
+  CircleX,
+  CircleArrowRight,
+  RotateCcw
+} from 'lucide-react';
 import clsx from 'clsx';
 import { ActionButton } from '@/shared/components/ui/ActionButton';
 
@@ -42,13 +47,18 @@ export const GameBottomBar = ({
       className={clsx(
         'right-0 left-0 w-full',
         'border-t-2 border-[var(--border-color)] bg-[var(--card-color)]',
-        'absolute bottom-0 z-10 px-2 py-2 sm:py-3 md:bottom-6 md:px-12 md:pt-2 md:pb-4',
-        'flex min-h-20 flex-row items-center justify-center',
+        'absolute bottom-0 z-10 px-2 py-4 sm:py-3 md:bottom-6 md:px-12 md:pt-2 md:pb-4',
+        'flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-0',
         className
       )}
     >
-      {/* Left Container: 50% width, aligned right */}
-      <div className='flex w-1/2 items-center justify-center'>
+      {/* Feedback Container: Hidden on mobile when no feedback, always visible on desktop */}
+      <div
+        className={clsx(
+          'w-full items-center justify-start sm:justify-center sm:flex sm:w-1/2',
+          showFeedback ? 'flex' : 'hidden'
+        )}
+      >
         <div
           className={clsx(
             'flex items-center gap-2 transition-all duration-500 sm:gap-3 md:gap-4',
@@ -73,32 +83,47 @@ export const GameBottomBar = ({
         </div>
       </div>
 
-      {/* Right Container: 50% width */}
-      <div className='flex w-1/2 flex-row items-end justify-center gap-2 sm:gap-3'>
-        {/* Fixed-height wrapper prevents layout shift when button is pressed */}
-        <div className='flex h-[68px] items-end sm:h-[72px]'>
+      {/* Buttons Container: Full width on mobile, 50% on desktop */}
+      <div className='flex w-full flex-row items-end justify-center gap-2 sm:w-1/2 sm:gap-3'>
+        {/* Main Action Button Wrapper: 80% if secondary exists, else 100% on mobile */}
+        <div
+          className={clsx(
+            'flex h-[68px] items-end sm:h-[72px]',
+            secondaryAction ? 'w-[80%] sm:w-auto' : 'w-full sm:w-auto'
+          )}
+        >
           <ActionButton
             ref={buttonRef}
             borderBottomThickness={12}
             borderRadius='3xl'
             className={clsx(
-              'w-auto px-6 py-2.5 text-lg font-medium transition-all duration-150 sm:px-12 sm:py-3 sm:text-xl',
-              !canCheck && !showContinue && 'cursor-default opacity-60'
+              'w-full px-6 py-2.5 text-lg font-medium transition-all duration-150 sm:w-auto sm:px-12 sm:py-3 sm:text-xl',
+              !canCheck &&
+                !showContinue &&
+                actionLabel?.toLowerCase() !== 'try again' &&
+                'cursor-default opacity-60'
             )}
             onClick={onAction}
           >
-            <span className='max-sm:hidden'>
-              {actionLabel || (showContinue ? 'continue' : 'check')}
-            </span>
-            {showContinue ? (
+            {actionLabel?.toLowerCase() === 'try again' ? (
+              <RotateCcw className='h-8 w-8' />
+            ) : showContinue ? (
               <CircleArrowRight className='h-8 w-8' />
             ) : (
               <CircleCheck className='h-8 w-8' />
             )}
+            <span className=''>
+              {actionLabel || (showContinue ? 'continue' : 'check')}
+            </span>
           </ActionButton>
         </div>
 
-        {secondaryAction}
+        {/* Secondary Action Wrapper: 20% on mobile */}
+        {secondaryAction && (
+          <div className='flex h-[68px] w-[20%] items-end sm:h-[72px] sm:w-auto'>
+            {secondaryAction}
+          </div>
+        )}
       </div>
     </div>
   );

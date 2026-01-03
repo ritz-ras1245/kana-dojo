@@ -4,7 +4,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/shared/lib/utils';
 
 const actionButtonVariants = cva(
-  'p-2  text-lg w-full hover:cursor-pointer flex flex-row justify-center items-center gap-2 ',
+  'p-2 text-lg w-full hover:cursor-pointer flex flex-row justify-center items-center gap-2 ',
   {
     variants: {
       colorScheme: {

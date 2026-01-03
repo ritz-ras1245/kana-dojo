@@ -47,20 +47,25 @@ export const useSmartReverseMode = (options: SmartReverseModeOptions = {}) => {
     const newConsecutive = consecutiveCorrect + 1;
     setConsecutiveCorrect(newConsecutive);
 
-    const reverseProbability = Math.min(
-      baseProbability + newConsecutive * incrementPerCorrect,
-      maxProbability
-    );
+    // TEMPORARY: Fixed 45% reverse mode rate
+    // Comment out the block below to restore smart mode
+    setIsReverse(random.real(0, 1) < 0.45);
 
-    // Add some randomness - occasionally force a mode switch to keep it interesting
-    const forceSwitch =
-      newConsecutive > 0 && newConsecutive % forceSwitchInterval === 0;
+    // ORIGINAL SMART MODE LOGIC (temporarily disabled):
+    // const reverseProbability = Math.min(
+    //   baseProbability + newConsecutive * incrementPerCorrect,
+    //   maxProbability
+    // );
 
-    if (forceSwitch) {
-      setIsReverse(prev => !prev);
-    } else {
-      setIsReverse(random.real(0, 1) < reverseProbability);
-    }
+    // // Add some randomness - occasionally force a mode switch to keep it interesting
+    // const forceSwitch =
+    //   newConsecutive > 0 && newConsecutive % forceSwitchInterval === 0;
+
+    // if (forceSwitch) {
+    //   setIsReverse(prev => !prev);
+    // } else {
+    //   setIsReverse(random.real(0, 1) < reverseProbability);
+    // }
   }, [
     consecutiveCorrect,
     baseProbability,
