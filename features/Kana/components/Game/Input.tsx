@@ -132,11 +132,13 @@ const InputGame = ({ isHidden, isReverse = false }: InputGameProps) => {
   // Keyboard shortcut for Enter/Space to trigger button
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      const isEnter = (event.ctrlKey || event.metaKey) && event.key === 'Enter';
+      const isEnter = event.key === 'Enter';
       const isSpace = event.code === 'Space' || event.key === ' ';
 
       if (isEnter) {
-        if (bottomBarState !== 'check') {
+        // Allow Enter to trigger Next button when correct
+        if (bottomBarState === 'correct') {
+          event.preventDefault();
           buttonRef.current?.click();
         }
       } else if (isSpace) {
@@ -321,6 +323,7 @@ const InputGame = ({ isHidden, isReverse = false }: InputGameProps) => {
         canCheck={canCheck}
         feedbackContent={targetChar}
         buttonRef={buttonRef}
+        hideRetry
       />
 
       {/* Spacer */}

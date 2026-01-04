@@ -119,11 +119,13 @@ const KanjiInputGame = ({
   // Keyboard shortcut for Enter/Space to trigger button
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      const isEnter = (event.ctrlKey || event.metaKey) && event.key === 'Enter';
+      const isEnter = event.key === 'Enter';
       const isSpace = event.code === 'Space' || event.key === ' ';
 
       if (isEnter) {
-        if (bottomBarState !== 'check') {
+        // Allow Enter to trigger Next button when correct
+        if (bottomBarState === 'correct') {
+          event.preventDefault();
           buttonRef.current?.click();
         }
       } else if (isSpace) {
@@ -349,6 +351,7 @@ const KanjiInputGame = ({
         canCheck={canCheck}
         feedbackContent={feedbackText}
         buttonRef={buttonRef}
+        hideRetry
       />
 
       <div className='h-32' />

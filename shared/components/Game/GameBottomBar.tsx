@@ -21,6 +21,8 @@ interface GameBottomBarProps {
   secondaryAction?: ReactNode;
   buttonRef?: React.RefObject<HTMLButtonElement | null>;
   className?: string;
+  /** When true, shows "Check" button instead of "Try Again" on wrong answers (for Input/Type mode) */
+  hideRetry?: boolean;
 }
 
 export const GameBottomBar = ({
@@ -32,11 +34,15 @@ export const GameBottomBar = ({
   actionLabel,
   secondaryAction,
   buttonRef,
-  className
+  className,
+  hideRetry = false
 }: GameBottomBarProps) => {
   const isCorrect = state === 'correct';
+  const isWrong = state === 'wrong';
   const showFeedback = state !== 'check';
   const showContinue = isCorrect;
+  // When hideRetry is true, treat wrong state like check state for button display
+  const showRetryButton = isWrong && !hideRetry;
 
   // Default titles if not provided
   const defaultTitle = isCorrect ? 'Nicely done!' : 'Wrong! Correct answer:';
@@ -100,12 +106,12 @@ export const GameBottomBar = ({
               'w-full px-6 py-2.5 text-lg font-medium transition-all duration-150 sm:w-auto sm:px-12 sm:py-3 sm:text-xl',
               !canCheck &&
                 !showContinue &&
-                state !== 'wrong' &&
+                !showRetryButton &&
                 'cursor-default opacity-60'
             )}
             onClick={onAction}
           >
-            {state === 'wrong' ? (
+            {showRetryButton ? (
               <RotateCcw className='h-8 w-8' />
             ) : state === 'correct' ? (
               <CircleArrowRight className='h-8 w-8' />
@@ -116,7 +122,7 @@ export const GameBottomBar = ({
               {actionLabel ||
                 (state === 'correct'
                   ? 'next'
-                  : state === 'wrong'
+                  : showRetryButton
                     ? 'try again'
                     : 'check')}
             </span>
