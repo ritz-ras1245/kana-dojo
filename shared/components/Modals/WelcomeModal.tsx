@@ -189,8 +189,11 @@ const WelcomeModal = () => {
                   router.push('/demo');
                 }}
               >
-                <CircleStar className='h-6 w-6' />
-                {t('steps.welcome.demoCta')}
+                <CircleStar
+                  className='h-6 w-6 animate-spin text-[var(--background-color)]'
+                  aria-hidden
+                />
+                <span className='ml-2'>{t('steps.welcome.demoCta')}</span>
               </ActionButton>
             </div>
           </div>
